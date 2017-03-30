@@ -3,7 +3,7 @@ import sys, secrets
 
 init_cogs = ["cogs.admin", "cogs.moderation", "cogs.events"]
 
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='%%')
 
 @bot.event
 async def on_ready():
