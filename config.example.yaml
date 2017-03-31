@@ -5,7 +5,7 @@ database:
   db: cack
 bot:
   token: 420
-  config-token: 69
+  debug-token: 69
   prefix: !
   debug-prefix: ?
 guilds:

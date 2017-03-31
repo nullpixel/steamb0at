@@ -1,9 +1,10 @@
 from discord.ext import commands
-import sys, secrets
+import sys, config
 
+config = getConfig()
 init_cogs = ["cogs.admin", "cogs.moderation", "cogs.events"]
 
-bot = commands.Bot(command_prefix='%%')
+bot = commands.Bot(command_prefix=config['bot']['prefix'])
 
 @bot.event
 async def on_ready():
@@ -12,10 +13,10 @@ async def on_ready():
 if __name__ == '__main__':
     debug = any('debug' in arg.lower() for arg in sys.argv)
     if debug:
-        bot.command_prefix = '$'
-        token = secrets.DEBUG_TOKEN
+        bot.command_prefix = config['bot']['debug_prefix']
+        token = config['bot']['debug_token']
     else:
-        token = secrets.BOT_TOKEN
+        token = config['bot']['token']
 
     for cog in init_cogs:
         try:
