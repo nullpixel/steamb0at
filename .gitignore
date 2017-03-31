@@ -1,2 +1,4 @@
 secrets.py
+config.yaml
+.vscode/
 __pycache__/

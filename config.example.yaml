@@ -1,0 +1,16 @@
+database:
+  host: localhost
+  user: conk
+  password: conkballs
+  db: cack
+bot:
+  token: 420
+  config-token: 69
+  prefix: !
+  debug-prefix: ?
+guilds:
+  123:
+    sever-log: 1234567
+  456:
+    sever-log: 123456789
+owner: 12345678
