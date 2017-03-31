@@ -8,4 +8,4 @@ def getConfig():
 def getConfigForGuild(guild):
     config = getConfig()
     guildc = config['guilds'][guild]
-    return
+    return guildc
