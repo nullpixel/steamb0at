@@ -14,8 +14,8 @@ async def on_ready():
 if __name__ == '__main__':
     debug = any('debug' in arg.lower() for arg in sys.argv)
     if debug:
-        bot.command_prefix = config['bot']['debug_prefix']
-        token = config['bot']['debug_token']
+        bot.command_prefix = config['bot']['debug-prefix']
+        token = config['bot']['debug-token']
     else:
         token = config['bot']['token']
 
