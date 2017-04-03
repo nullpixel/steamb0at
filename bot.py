@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
 from discord.ext import commands
 import sys, config
 
-config = getConfig()
+config = config.getConfig()
 init_cogs = ["cogs.admin", "cogs.moderation", "cogs.events"]
 
 bot = commands.Bot(command_prefix=config['bot']['prefix'])
