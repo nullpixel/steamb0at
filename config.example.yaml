@@ -6,8 +6,8 @@ database:
 bot:
   token: 420
   debug-token: 69
-  prefix: !
-  debug-prefix: ?
+  prefix: "!"
+  debug-prefix: "?"
 guilds:
   123:
     sever-log: 1234567

@@ -1,4 +1,9 @@
 secrets.py
 config.yaml
 .vscode/
-__pycache__/
+
+*__pycache__/*
+*.py[cod]
+*$py.class
+
+__pycache__
