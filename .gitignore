@@ -7,3 +7,5 @@ config.yaml
 *$py.class
 
 **__pycache__
+
+config.py
