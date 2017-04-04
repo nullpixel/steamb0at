@@ -2,10 +2,9 @@
 from discord.ext import commands
 import sys, config
 
-config = config.getConfig()
 init_cogs = ["cogs.admin", "cogs.moderation", "cogs.events"]
 
-bot = commands.Bot(command_prefix=config['bot']['prefix'])
+bot = commands.Bot(command_prefix=config.prefix)
 
 @bot.event
 async def on_ready():
@@ -14,10 +13,10 @@ async def on_ready():
 if __name__ == '__main__':
     debug = any('debug' in arg.lower() for arg in sys.argv)
     if debug:
-        bot.command_prefix = config['bot']['debug-prefix']
-        token = config['bot']['debug-token']
+        bot.command_prefix = config.debug_prefix
+        token = config.debug_token
     else:
-        token = config['bot']['token']
+        token = config.token
 
     for cog in init_cogs:
         try:
@@ -25,5 +24,5 @@ if __name__ == '__main__':
         except Exception as e:
             exc = '{}: {}'.format(type(e).__name__, e)
             print('Failed to load extension {}\n{}'.format(cog, exc))
-    
+
     bot.run(token)
