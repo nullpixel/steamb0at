@@ -1,24 +1,28 @@
 #!/usr/bin/env python3
-from discord.ext import commands
-import sys, config
+import sys
 
-config = config.getConfig()
+from discord.ext import commands
+
+import config
+
 init_cogs = ["cogs.admin", "cogs.moderation", "cogs.events"]
 
-bot = commands.Bot(command_prefix=config['bot']['prefix'])
+bot = commands.Bot(command_prefix=config.prefix)
+
 
 @bot.event
 async def on_ready():
     print("I'm logged into discord!")
 
+
 if __name__ == '__main__':
     debug = any('debug' in arg.lower() for arg in sys.argv)
     if debug:
-        bot.command_prefix = config['bot']['debug-prefix']
-        token = config['bot']['debug-token']
+        bot.command_prefix = config.debug_prefix
+        token = config.debug_token
     else:
-        token = config['bot']['token']
-
+        token = config.token
+    
     for cog in init_cogs:
         try:
             bot.load_extension(cog)
