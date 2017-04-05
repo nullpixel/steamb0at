@@ -16,7 +16,7 @@ class Events:
         pass
     
     async def on_message_delete(self, message):
-        log_message = ":wastebasket: " + message.author.name + "#" + message.author.discriminator + "`" + message.author.id + "` deleted from channel #" + message.channel.name + "\n" + message.content
+        log_message = ":wastebasket: {0.name}#{0.discriminator} (`{0.id}`) deleted from channel {1.channel.mention} \n{1.content}".format(message.author, message)
         await self.bot.send_message((await self.get_log_channel(message)), log_message)
 
 
