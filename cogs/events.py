@@ -6,6 +6,8 @@ import config
 class Events:
     def __init__(self, bot):
         self.bot = bot
+    async def get_log_channel(self, message):
+        return self.bot.get_channel(config.guilds[message.server.id]['server-log'])
     
     async def on_message(self, message):
         print(message.server.id)
@@ -14,9 +16,8 @@ class Events:
         pass
     
     async def on_message_delete(self, message):
-        log_channel = self.bot.get_channel(config.guilds[message.server.id]['server-log'])
         log_message = ":wastebasket: " + message.author.name + "#" + message.author.discriminator + "`" + message.author.id + "` deleted from channel #" + message.channel.name + "\n" + message.content
-        await self.bot.send_message(log_channel, log_message)
+        await self.bot.send_message((await self.get_log_channel(message)), log_message)
 
 
 def setup(bot):
