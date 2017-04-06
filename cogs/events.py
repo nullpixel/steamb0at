@@ -10,7 +10,7 @@ class Events:
         return self.bot.get_channel(config.guilds[message.server.id]['server-log'])
     
     async def on_message(self, message):
-        print(message.server.id)
+        pass
     
     async def on_message_edit(self, before, after):
         pass
