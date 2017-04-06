@@ -6,4 +6,6 @@ config.yaml
 *.py[cod]
 *$py.class
 
-__pycache__
+**__pycache__
+
+config.py
