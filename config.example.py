@@ -17,7 +17,8 @@ debug_prefix = "?"
 guilds = {
     '123':
         {
-            'server-log':'1234567'},
+            'server-log':'1234567',
+            'message-log':'123231'}
     '456':
         {
             'server-log':'123456789'}
