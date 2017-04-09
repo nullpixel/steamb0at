@@ -10,12 +10,18 @@ class Logging:
         if channel == 'mod_log':
             try:
                 server = guildconfig.GuildConfig.objects.get(guild=server)
-                channel = server.objects.get(mod_log)
-                print(channel)
+                # channel = server.objects.get(mod_log) this is broked
+                #print(server.objects)
+                # print(channel)    
             except DoesNotExist:
                 print("Log channel not configured")
 
     def configureLogging(self, server, mod_log, server_log):
-        guild = guildconfig.GuildConfig(guild=server, mod_log=mod_log, server_log=server_log)
+        try:
+            guild = guildconfig.GuildConfig(guild=server, mod_log=mod_log, server_log=server_log)
+            guild.save()
+            print("Log channels setup for {0}".format(server))
+        except:
+            print("An error occured setting up log channels for {0}".format(server))
         return
 

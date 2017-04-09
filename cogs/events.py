@@ -17,6 +17,7 @@ class Events:
 
     async def on_message(self, message):
         log = Logging(self.bot)
+        # log.configureLogging(message.server.id, 300690197648113665, 300690197648113665) debug line kek
         log.getLog(message.server.id, 'mod_log')
         pass
 
