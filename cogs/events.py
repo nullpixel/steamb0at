@@ -1,7 +1,6 @@
 import discord
-
-import config
-
+from discord.ext import commands
+import steamboat.config as config
 
 class Events:
     def __init__(self, bot):
@@ -39,5 +38,14 @@ class Events:
         log_message = ":wastebasket: #{0} was deleted".format(channel.name)
         await self.bot.send_message(await self.get_log_channel(channel.server.id, 'server-log'), log_message)
 
+    async def on_command_error(self, exception, ctx):
+        if isinstance(exception, commands.CheckFailure):
+            return
+        if isinstance(exception, commands.CommandNotFound):
+            await self.bot.send_message(ctx.channel, "You need to specify all the command arguments")
+            return
+
+        print(exception)
+        
 def setup(bot):
     bot.add_cog(Events(bot))

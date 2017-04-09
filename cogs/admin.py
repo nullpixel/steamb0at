@@ -1,7 +1,6 @@
 from discord.ext import commands
 from .utils import checks
 
-
 class Admin:
     def __init__(self, bot):
         self.bot = bot
@@ -23,6 +22,11 @@ class Admin:
         """Unloads an extension."""
         self.bot.unload_extension(extension_name)
         await self.bot.say("{} unloaded.".format(extension_name))
+    
+    @commands.command(hidden=True)
+    @checks.is_owner()
+    async def setting(self, *, type: str, setting: str, value: str):
+        return
 
 
 def setup(bot):

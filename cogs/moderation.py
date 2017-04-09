@@ -7,25 +7,25 @@ class Moderation:
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(no_pm=True)
+    @commands.command(no_pm=True, pass_context=True)
     @checks.admin_or_permissions(kick_members=True)
-    async def kick(self, *, member: discord.Member):
+    async def kick(self, ctx, member: discord.Member, *, reason: str):
         try:
             await self.bot.kick(member)
         except discord.Forbidden:
             await self.bot.say('I don\'t have permission to do that :frowning:')
         else:
-            await self.bot.say('An unhandled error was raised whilst kicking that user.')
+            await self.bot.say(':ok_hand: kicked {0.name}#{0.discriminator} (`{1}`)'.format(member, reason))
     
-    @commands.command(no_pm=True)
+    @commands.command(no_pm=True, pass_context=True)
     @checks.admin_or_permissions(ban_members=True)
-    async def ban(self, *, member: discord.Member):
+    async def ban(self, ctx, member: discord.Member, *, reason: str):
         try:
             await self.bot.ban(member)
         except discord.Forbidden:
             await self.bot.say('I don\'t have permission to do that :frowning:')
         else:
-            await self.bot.say('An unhandled error was raised whilst banning that user.')
+            await self.bot.say(':ok_hand: banned {0.name}#{0.discriminator} (`{1}`)'.format(member, reason))
 
 
 def setup(bot):

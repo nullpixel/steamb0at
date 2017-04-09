@@ -1,5 +1,4 @@
-secrets.py
-config.yaml
+steamboat/config.py
 .vscode/
 
 *__pycache__/*
@@ -7,5 +6,3 @@ config.yaml
 *$py.class
 
 **__pycache__
-
-config.py

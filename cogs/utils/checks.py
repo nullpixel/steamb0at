@@ -3,9 +3,10 @@
 
 from discord.ext import commands
 import discord.utils
+import steamboat.config as config
 
 def is_owner_check(message):
-    return message.author.id == '140527820500762624'
+    return message.author.id == config.owner
 
 def is_owner():
     return commands.check(lambda ctx: is_owner_check(ctx.message))
