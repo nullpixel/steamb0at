@@ -11,7 +11,7 @@ class Logging:
             try:
                 server = guildconfig.GuildConfig.objects.get(guild=server)
                 # channel = server.objects.get(mod_log) this is broked
-                #print(server.objects)
+                # print(server.objects)
                 # print(channel)    
             except DoesNotExist:
                 print("Log channel not configured")
