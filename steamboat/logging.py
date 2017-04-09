@@ -1,14 +1,21 @@
 from mongoengine import *
-import .config
-import .schema.incident, .schema.message, .schema.guildconfig
+from steamboat import config
+from steamboat.schema import incident, message, guildconfig
 
-async def getLogChannel(bot, server, channel):
-    guildconfig = GuildConfig.object.get(guild=server) 
-    if channel == 'mod_log':
-        channel = bot.get_channel(guildconfig.mod_log)
-        if channel is None:
-            return
-    elif channel == 'server-log':
-        channel = bot.get_channel(guildconfig.server_log)
-        if channel is None:
-            return
+class Logging:
+    def __init__(self, bot):
+        self.bot = bot
+
+    def getLog(self, server, channel):
+        if channel == 'mod_log':
+            try:
+                server = guildconfig.GuildConfig.objects.get(guild=server)
+                channel = server.objects.get(mod_log)
+                print(channel)
+            except DoesNotExist:
+                print("Log channel not configured")
+
+    def configureLogging(self, server, mod_log, server_log):
+        guild = guildconfig.GuildConfig(guild=server, mod_log=mod_log, server_log=server_log)
+        return
+

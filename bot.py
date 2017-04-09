@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from mongoengine import *
 import sys
 from discord.ext import commands
 import steamboat.config as config
@@ -12,6 +13,12 @@ async def on_ready():
     print("I'm logged into discord!")
 
 if __name__ == '__main__':
+    try:
+        connect(config.database['name'], host=config.database['host'], port=config.database['port'])
+        print("Connected to database")
+    except:
+        print("Could not connect to mongodb")
+
     debug = any('debug' in arg.lower() for arg in sys.argv)
     if debug:
         bot.command_prefix = config.debug_bot['prefix']

@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
-import steamboat.config as config
+from steamboat import config
+from steamboat.logging import Logging
 
 class Events:
     def __init__(self, bot):
@@ -15,6 +16,8 @@ class Events:
             return channel
 
     async def on_message(self, message):
+        log = Logging(self.bot)
+        log.getLog(message.server.id, 'mod_log')
         pass
 
     async def on_message_edit(self, before, after):
