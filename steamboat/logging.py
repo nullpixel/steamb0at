@@ -20,13 +20,12 @@ class Logging:
 
     async def configureLogging(self, server, log):
         try:
-            guild = GuildConfig(guild=server, log=log)
-            guild.save()
+            guild = GuildConfig(guild=server, log=log).save()
         except:
             raise LoggingException("An error occured whilst setting up the log channel.")
         return
 
-    async def actToDict(action):
+    def actToDict(action):
         actdict = {'name': None, 'emoji': None}
         if action == 1:
             actdict['name'] = "kicked"
@@ -39,7 +38,7 @@ class Logging:
             actdict['emoji'] = ":no_mouth:"
         return actdict
 
-    def logMessage(self, message):
+    async def logMessage(self, message):
         try:
             log = MessageLog(guild=message.server.id, channel=message.channel.id, author=message.author.id, content=message.clean_content).save()
         except:
