@@ -20,10 +20,17 @@ class Events:
             return
         if before.content == after.content:
             pass
+<<<<<<< HEAD
         else:
             log_message = ":pencil: {0.name}#{0.discriminator} (`{0.id}`) edited their message in {1.channel.mention}\n**B** {1.clean_content}\n**A** {2.clean_content}"
             log_message = log_message.format(before.author,before,after)
             await self.bot.send_message(await self.get_log_channel(before.server.id), log_message)
+=======
+        log_message = ":pencil: {0.name}#{0.discriminator} (`{0.id}`) edited their message in {1.channel.mention}\n**B** {1.clean_content}\n**A** {2.clean_content}"
+        #dont forget to add something for message saving to the DB
+        log_message = log_message.format(before.author,before,after)
+        await self.bot.send_message(await self.get_log_channel(before.server.id, 'message-log'), log_message)
+>>>>>>> 65ba0e3df60cec4db16f1762ea5ecac10fe9b655
 
     async def on_message_delete(self, message):
         if await self.get_log_channel(message.server.id) is None:
