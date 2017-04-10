@@ -3,9 +3,10 @@
 
 from discord.ext import commands
 import discord.utils
+import steamboat.config as config
 
 def is_owner_check(message):
-    return message.author.id == '140527820500762624'
+    return message.author.id == config.owner
 
 def is_owner():
     return commands.check(lambda ctx: is_owner_check(ctx.message))
@@ -44,13 +45,13 @@ def role_or_permissions(ctx, check, **perms):
 
 def mod_or_permissions(**perms):
     def predicate(ctx):
-        return role_or_permissions(ctx, lambda r: r.name in ('Bot Mod', 'Bot Admin'), **perms)
+        return role_or_permissions(ctx, lambda r: r.name in ('Moderator', 'Admin'), **perms)
 
     return commands.check(predicate)
 
 def admin_or_permissions(**perms):
     def predicate(ctx):
-        return role_or_permissions(ctx, lambda r: r.name == 'Bot Admin', **perms)
+        return role_or_permissions(ctx, lambda r: r.name == 'Admin', **perms)
 
     return commands.check(predicate)
 
