@@ -22,11 +22,16 @@ class Logging:
         return channel
 
     async def configureLogging(self, server, log):
+        if not GuildConfig.objects(guild=server):
+            try:
+                guild = GuildConfig(guild=server, log=log).save()
+            except:
+                raise LoggingException("An error occured whilst setting up the log channel.")
+            return
         try:
-            guild = GuildConfig(guild=server, log=log).save()
+            GuildConfig.objects(guild=server).update_one(log=log)
         except:
-            raise LoggingException("An error occured whilst setting up the log channel.")
-        return
+            raise LoggingException("An error occured whilst editing the log channel.")
 
     def actToDict(self, action):
         actdict = {'name': None, 'emoji': None}
