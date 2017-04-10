@@ -68,7 +68,6 @@ class Events:
         elif before.roles != after.roles:
             delta = set(before.roles).symmetric_difference(set(after.roles))
             for role in delta:
-                delta.pop
                 if (role in after.roles):
                     log_message = ":key: {0} (`{0.id}`) added a role {1.name}"
                 else:
