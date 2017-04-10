@@ -1,27 +1,58 @@
 from mongoengine import *
 from steamboat import config
-from steamboat.schema import incident, message, guildconfig
+from steamboat.schema.guildconfig import GuildConfig
+from steamboat.schema.incident import Incident
+from steamboat.schema.message import MessageLog
+
+class LoggingException(Exception):
+    pass
 
 class Logging:
     def __init__(self, bot):
         self.bot = bot
 
-    def getLog(self, server, channel):
-        if channel == 'mod_log':
-            try:
-                server = guildconfig.GuildConfig.objects.get(guild=server)
-                # channel = server.objects.get(mod_log) this is broked
-                #print(server.objects)
-                # print(channel)    
-            except DoesNotExist:
-                print("Log channel not configured")
+    async def getLog(self, server):
+        server = GuildConfig.getGuild(server)
+        if server is None:
+            return None
+        channel = await self.bot.get_channel(server['log'])
+        return channel
 
-    def configureLogging(self, server, mod_log, server_log):
+    async def configureLogging(self, server, log):
         try:
-            guild = guildconfig.GuildConfig(guild=server, mod_log=mod_log, server_log=server_log)
+            guild = GuildConfig(guild=server, log=log)
             guild.save()
-            print("Log channels setup for {0}".format(server))
         except:
-            print("An error occured setting up log channels for {0}".format(server))
+            raise LoggingException("An error occured whilst setting up the log channel.")
         return
 
+    async def actToDict(action):
+        actdict = {'name': None, 'emoji': None}
+        if action == 1:
+            actdict['name'] = "kicked"
+            actdict['emoji'] = ":boot:"
+        elif action == 2:
+            actdict['name'] = "banned"
+            actdict['emoji'] = ":rotating_light:"
+        elif action == 3:
+            actdict['name'] = "muted"
+            actdict['emoji'] = ":no_mouth:"
+        return actdict
+
+    def logMessage(self, message):
+        try:
+            log = MessageLog(guild=message.server.id, channel=message.channel.id, author=message.author.id, content=message.clean_content).save()
+        except:
+            print("Error logging message to db")
+    
+    async def logIncident(self, guild, action, moderator, targetuser, reason):
+        act = self.actToDict(action)
+        try:
+            log = Incident(guild=guild.id, action=action, moderator=moderator.id, target=targetuser.id, reason=reason).save()
+            if await getLog(guild) is None:
+                return
+            log_message = "{0['emoji']} {1.name}#{1.discriminator} (`{1.id}`) was {0['name']} by **{2.name}#{2.discriminator}**: `{3}`".format(act, targetuser, moderator, reason)
+            self.bot.send_message(await getLog(guild), log_message)
+        except:
+            raise LoggingException("An unknown error occured whilst logging that incident to the database.")
+            print("Error logging incident")

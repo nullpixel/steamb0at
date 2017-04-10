@@ -3,5 +3,13 @@ from mongoengine import *
 class GuildConfig(Document):
     ''' Settings specific to a guild '''
     guild = IntField(required=True)
-    mod_log = IntField(required=False)
-    server_log = IntField(required=False)
+    log = IntField(required=False)
+    mute_role = IntField(required=False)
+
+    async def getGuild(guild):
+        ''' Returns a guild config dict '''
+        try:
+            server = GuildConfig.objects.get(guild=guild).to_mongo()
+            return server
+        except DoesNotExist:
+            return None
