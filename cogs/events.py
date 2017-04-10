@@ -54,7 +54,30 @@ class Events:
             return
         log_message = ":outbox_tray: {0.name}#{0.discriminator} (`{0.id}`) left the server".format(member)
         await self.bot.send_message(await self.get_log_channel(member.server.id), log_message)
-    
+
+    async def on_member_update(self, before, after):
+        if before.nick!=after.nick:
+            if before.nick is None:
+                log_message = ":name_badge: {0} (`{0.id}`) added a nick `{1.nick}`"
+            elif after.nick is None:
+                log_message = ":name_badge: {0} (`{0.id}`) removed a nick `{0.nick}`"
+            else:
+                log_message =":name_badge: {0} (`{0.id}`) changed their nick from `{0.nick}` to `{1.nick}`"
+        elif before.name != after.name:
+            log_message = ":name_badge: {1} (`{0.id}`) changed their username from {0} to {1}"
+        elif before.roles != after.roles:
+            delta = set(before.roles).symmetric_difference(set(after.roles))
+            for role in delta:
+                delta.pop
+                if (role in after.roles):
+                    log_message = ":key: {0} (`{0.id}`) added a role {1.name}"
+                else:
+                    log_message = ":key: {0} (`{0.id}`) removed a role {1.name}"
+                await self.bot.send_message(await self.get_log_channel(before.server.id),log_message.format(before,role))
+            return
+        else:
+            return
+        await self.bot.send_message(await self.get_log_channel(before.server.id),log_message.format(before,after))
         
     async def on_command_error(self, exception, ctx):
         if isinstance(exception, commands.CheckFailure):
