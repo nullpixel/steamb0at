@@ -12,10 +12,13 @@ class Logging:
         self.bot = bot
 
     async def getLog(self, server):
-        server = GuildConfig.getGuild(server)
+        server = await GuildConfig.getGuild(server)
         if server is None:
             return None
-        channel = await self.bot.get_channel(server['log'])
+        chan_id = server['log']
+        if chan_id is None:
+            return None
+        channel = self.bot.get_channel(str(chan_id))
         return channel
 
     async def configureLogging(self, server, log):
@@ -25,7 +28,7 @@ class Logging:
             raise LoggingException("An error occured whilst setting up the log channel.")
         return
 
-    def actToDict(action):
+    def actToDict(self, action):
         actdict = {'name': None, 'emoji': None}
         if action == 1:
             actdict['name'] = "kicked"
@@ -42,16 +45,16 @@ class Logging:
         try:
             log = MessageLog(guild=message.server.id, channel=message.channel.id, author=message.author.id, content=message.clean_content).save()
         except:
-            print("Error logging message to db")
+            raise LoggingException("An unknown error happened kek")
     
     async def logIncident(self, guild, action, moderator, targetuser, reason):
         act = self.actToDict(action)
         try:
             log = Incident(guild=guild.id, action=action, moderator=moderator.id, target=targetuser.id, reason=reason).save()
-            if await getLog(guild) is None:
+            if await self.getLog(guild.id) is None:
                 return
-            log_message = "{0['emoji']} {1.name}#{1.discriminator} (`{1.id}`) was {0['name']} by **{2.name}#{2.discriminator}**: `{3}`".format(act, targetuser, moderator, reason)
-            self.bot.send_message(await getLog(guild), log_message)
-        except:
-            raise LoggingException("An unknown error occured whilst logging that incident to the database.")
+            log_message = "{0} {1.name}#{1.discriminator} (`{1.id}`) was {2} by **{3.name}#{3.discriminator}**: `{4}`".format(act['emoji'], targetuser, act['name'], moderator, reason)
+            await self.bot.send_message(await self.getLog(guild.id), log_message)
+        except Exception as error:
+            raise LoggingException("An unknown error occured whilst logging that incident to the database. "+error)
             print("Error logging incident")

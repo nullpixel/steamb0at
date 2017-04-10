@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from steamboat import config
 from steamboat.logging import Logging
+import traceback
 
 class Events:
     def __init__(self, bot):
@@ -9,13 +10,13 @@ class Events:
         self.log = Logging(self.bot)
 
     async def get_log_channel(self, server_id):
-        return self.log.getLog(server_id)
+        return await self.log.getLog(server_id)
 
     async def on_message(self, message):
         await self.log.logMessage(message)
 
     async def on_message_edit(self, before, after):
-        if self.get_log_channel(before.server.id) is None:
+        if await self.get_log_channel(before.server.id) is None:
             return
         if before.content == after.content:
             pass
@@ -46,9 +47,12 @@ class Events:
         if isinstance(exception, commands.CheckFailure):
             return
         if isinstance(exception, commands.CommandNotFound):
-            await self.bot.send_message(ctx.channel, "You need to specify all the command arguments")
             return
-        print(exception)
+        if isinstance(exception, commands.MissingRequiredArgument):
+            self.bot.send_message(ctx.channel, "You need to specify all the command arguments")
+            return
+        tb = traceback.format_exception(type(exception), exception, exception.__traceback__)
+        print("\n".join(tb))
         
 def setup(bot):
     bot.add_cog(Events(bot))

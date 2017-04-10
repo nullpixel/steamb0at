@@ -20,9 +20,9 @@ class Moderation:
         else:
             await self.bot.say(':ok_hand: kicked {0.name}#{0.discriminator} (`{1}`)'.format(member, reason))
             try:
-                self.log.logIncident(ctx.message.server, 1, ctx.message.author, member, reason)
+                await self.log.logIncident(ctx.message.server, 1, ctx.message.author, member, reason)
             except LoggingException as error:
-                self.bot.say(error)
+                await self.bot.say(error)
     
     @commands.command(no_pm=True, pass_context=True)
     @checks.admin_or_permissions(ban_members=True)
@@ -33,10 +33,14 @@ class Moderation:
             await self.bot.say('I don\'t have permission to do that :frowning:')
         else:
             await self.bot.say(':ok_hand: banned {0.name}#{0.discriminator} (`{1}`)'.format(member, reason))
+            try:
+                await self.log.logIncident(ctx.message.server, 2, ctx.message.author, member, reason)
+            except LoggingException as error:
+                await self.bot.say(error)
 
     @commands.command(no_pm=True, pass_context=True)
     @checks.admin_or_permissions(manage_server=True)
-    async def setLog(self, ctx, *, channel: discord.Channel):
+    async def setlog(self, ctx, *, channel: discord.Channel):
         try:
             await self.log.configureLogging(ctx.message.server.id, channel.id)
             await self.bot.say(':ok_hand: I will now log all events to #{0}'.format(channel))
