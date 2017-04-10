@@ -49,7 +49,7 @@ class Events:
         if isinstance(exception, commands.CommandNotFound):
             return
         if isinstance(exception, commands.MissingRequiredArgument):
-            self.bot.send_message(ctx.channel, "You need to specify all the command arguments")
+            self.bot.send_message(ctx.message.channel, "You need to specify all the command arguments")
             return
         tb = traceback.format_exception(type(exception), exception, exception.__traceback__)
         print("\n".join(tb))
